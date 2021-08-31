@@ -10,11 +10,15 @@ from sklearn.cluster import AgglomerativeClustering
 import scipy.cluster.hierarchy as sch
 import scipy.spatial.distance as spd
 import matplotlib.pyplot as plt
-'''url = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv'
+
+# getting data
+
+url = 'https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_deaths_US.csv'
 res = requests.get(url, allow_redirects=True)
 with open('covid_dataset.csv','wb') as file:
-    file.write(res.content)'''
+    file.write(res.content)
 
+# reading the data
 
 data_original = pd.read_csv('covid_dataset.csv') 
 #print(len(data_original))
@@ -23,6 +27,7 @@ grouped_data = data.groupby(['Province_State']) # group states togethers
 grouped_and_summed =grouped_data.sum()
 grouped_and_summed = grouped_and_summed.reset_index()
 
+# pre-processing the data
 # remove places that are not US states
 grouped_and_summed.drop(grouped_and_summed.loc[grouped_and_summed['Province_State']=='Northern Mariana Islands'].index,inplace=True)
 grouped_and_summed.drop(grouped_and_summed.loc[grouped_and_summed['Province_State']=='Guam'].index,inplace=True)
@@ -39,12 +44,8 @@ cali_row = grouped_and_summed[grouped_and_summed['Province_State'] == 'Californi
 wisc_row_cumulative = wisc_row.cumsum(axis=1)   # cumulative time series of Wisconsin and California
 cali_row_cumulative = cali_row.cumsum(axis=1)
 
-wisc_row_diff = wisc_row.diff(axis=1).iloc[:,1:]  # differenced time series of Wisconsin and California
-cali_row_diff = cali_row.diff(axis=1).iloc[:, 1:].astype(int)
-
-print(wisc_row_diff.values.tolist())
-#print(np.asarray(cali_row_diff).tolist())
-
+# wisc_row_diff = wisc_row.diff(axis=1).iloc[:,1:]  # differenced time series of Wisconsin and California
+# cali_row_diff = cali_row.diff(axis=1).iloc[:, 1:].astype(int)
 
 # parameters -> mean, standard deviation, median, 50th quantile 
 
